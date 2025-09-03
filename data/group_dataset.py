@@ -1,6 +1,6 @@
 import numpy as np 
 
-class DMU_group_dataset():
+class DMU_group():
     """
     This is one group of n_dmus, n_inputs, n_outputs 
     """

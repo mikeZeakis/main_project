@@ -1,10 +1,12 @@
 #import libraries 
-from data import DMU_group_dataset
+from data import DMU_group
 
 
 if __name__ == "__main__":
     
-    #data configuration 
+    #data configuration for 1 group 
+    #in training we will need N groups 
+    
     n_dmus = 10
     n_inputs = 5
     n_outputs = 3
@@ -13,7 +15,7 @@ if __name__ == "__main__":
     output_range = [5,40]
     
     
-    my_dataset = DMU_group_dataset(n_dmus, n_inputs, n_outputs, input_range, output_range)
+    my_dataset = DMU_group(n_dmus, n_inputs, n_outputs, input_range, output_range)
     
     #generate data 
     my_dataset.data_generator()    

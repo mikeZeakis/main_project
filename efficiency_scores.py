@@ -1,4 +1,3 @@
-import numpy as np 
 import cvxpy as cp
 
 def dea_input_oriented_extended(X, Y, dmu_index, epsilon=1e-4):
