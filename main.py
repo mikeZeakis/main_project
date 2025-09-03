@@ -1,5 +1,6 @@
 #import libraries 
-from data import DMU_group
+from data.group_dataset import DMU_group
+from efficiency_scores import dea_input_oriented_extended
 
 
 if __name__ == "__main__":
@@ -11,8 +12,8 @@ if __name__ == "__main__":
     n_inputs = 5
     n_outputs = 3
 
-    input_range = [1,10]
-    output_range = [5,40]
+    input_range = [1,100]
+    output_range = [1,400]
     
     
     my_dataset = DMU_group(n_dmus, n_inputs, n_outputs, input_range, output_range)
@@ -20,8 +21,14 @@ if __name__ == "__main__":
     #generate data 
     my_dataset.data_generator()    
     
-    print("e?")
-    #calculate efficiencies 
+    X = my_dataset.inputs
+    Y = my_dataset.outputs
+    
+    #calculate efficiencies
+    for dmu_index in range(n_dmus):
+        theta, s_minus, s_plus, lambdas = dea_input_oriented_extended(X, Y, dmu_index)
+        my_dataset.efficinces.append(round(theta.item(),6))
+    print(f"These are the efficincy scores for one groupf of {n_dmus} DMUs: \n {my_dataset.efficinces}")
     
     #manipulate data to the correct form 
     
