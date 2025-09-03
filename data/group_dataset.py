@@ -12,7 +12,7 @@ class DMU_group():
         self.input_range = input_range
         self.output_range = output_range
         
-        self.efficinces = np.zeros(n_dmus)
+        self.efficinces = []
         
         self.inputs = np.zeros(n_inputs)
         self.outputs = np.zeros(n_outputs)
