@@ -12,7 +12,7 @@ class DMU_group():
         self.input_range = input_range
         self.output_range = output_range
         
-        self.efficinces = []
+        self.efficiencies = []
         
         self.inputs = np.zeros(n_inputs)
         self.outputs = np.zeros(n_outputs)
@@ -45,7 +45,7 @@ class DMU_group():
         -------
         2D numpy array of dimensions n_dmus x (n_input + n_outputs) 
         
-        example
+        --example--
         n_dmus = 4
         n_inputs = 3
         n_outputs = 2
@@ -64,5 +64,5 @@ class DMU_group():
         pass
     
     def calculate_efficiences(self):
-        return self.efficinces
+        return self.efficiencies
         
