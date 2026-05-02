@@ -1,6 +1,6 @@
 import cvxpy as cp
 
-def dea_input_oriented_extended(X, Y, dmu_index, epsilon=1e-4):
+def calculate_efficiencies(X, Y, dmu_index, epsilon=1e-4): #dea_input_oriented_extended
     """
     Solve the input-oriented DEA problem with slacks for a given DMU.
 
@@ -52,5 +52,4 @@ def dea_input_oriented_extended(X, Y, dmu_index, epsilon=1e-4):
 
 
 def visualize_efficiencies():
-    
-    return 0
+    pass

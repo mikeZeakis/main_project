@@ -5,23 +5,19 @@ from torch.utils.data import Dataset
 class Group_collection(Dataset):
     
     def __init__(self):
-        self.collection = [] # this is the list of groups that takes as input to 
-                             #create tha dataset ready for the transformer
+        self.collection = [] # this is a list of DMU_groups 
         self.X = []
         self.y = []
-        
         
     #add a group of DMUs (class -> group_dataset)
     def add_group(self, group):
         self.collection.append(group)
-        
         
     def __len__(self):
         return self.X.shape[0]
     
     def __getitem__(self, idx):
         return self.X[idx],self.y[idx]
-    
     
     def data_manipulation(self,dtype=torch.float32):
         
