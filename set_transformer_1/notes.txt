@@ -1,0 +1,5 @@
+This is the official PyTorch implementation of the paper: 
+Set Transformer: A Framework for Attention-based Permutation-Invariant 
+Neural Networks
+
+link: https://arxiv.org/abs/1810.00825
