@@ -1,13 +1,13 @@
 #import libraries 
 from data.group_dataset import DMU_group
 from data.compined_dataset import Group_collection
-from data.visualization import plot_efficiencies
+#from data.visualization import plot_efficiencies
 from efficiency_scores import dea_input_oriented_extended
 
 from torch.utils.data import random_split, DataLoader
-import os
 
 
+from set_transformer_1.model import SetTransformer
 
 if __name__ == "__main__":
     #you might need this line for an error!
@@ -40,11 +40,7 @@ if __name__ == "__main__":
             current_dataset.efficiencies.append(round(theta.item(),6))
             
             
-        dataset.add_group(current_dataset)
-    
-    
-    
-    
+        dataset.add_group(current_dataset)    
     
     #plot_efficiencies(my_dataset.efficiencies)
     
@@ -61,8 +57,24 @@ if __name__ == "__main__":
     train_loader = DataLoader(train_dataset,batch_size=4)
     test_loader = DataLoader(test_dataset,batch_size=2)
 
-    
+
     #load model 
+    dim_input = n_inputs + n_outputs
+    
+    
+    model_1 = SetTransformer(
+        dim_input = dim_input,
+        num_outputs =1,
+        dim_output = n_dmus
+    )
+    
+    #run one single forward
+    X, y = next(iter(train_loader))
+    
+    output = model_1(X)
+    print(output)
+    print(output.shape)
+    
     
     
     #feed model (train data)
