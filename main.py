@@ -14,7 +14,7 @@ if __name__ == "__main__":
     #os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE" 
     
     #every group will have    
-    n_dmus = 5
+    n_dmus = 10
     n_inputs = 3
     n_outputs = 2
     
@@ -32,13 +32,6 @@ if __name__ == "__main__":
         
         #calculate efficiencies
         for dmu_index in range(n_dmus):
-        #     theta, s_minus, s_plus, lambdas = dea_input_oriented_extended(current_dataset.inputs, current_dataset.outputs, dmu_index)
-        #     current_dataset.efficiencies.append(round(theta.item(),6))
-            
-            
-        # dataset.add_group(current_dataset)    
-    
-    #plot_efficiencies(my_dataset.efficiencies)
             theta, s_minus, s_plus, lambdas = calculate_efficiencies(current_dataset.inputs, current_dataset.outputs, dmu_index)
             current_dataset.efficiencies.append(round(theta.item(),6)) 
         
