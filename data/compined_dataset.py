@@ -26,10 +26,10 @@ class Group_collection(Dataset):
             #ensure shapes are correct 
             inputs = np.asarray(curr_group.inputs)
             outputs = np.asarray(curr_group.outputs)
-            efficiencies = np.asarray(curr_group.efficiencies).reshape(-1,1)
+            efficiencies = np.asarray(curr_group.efficiencies).reshape(1,-1)
             
             #validate row count 
-            assert inputs.shape[0] == outputs.shape[0] == efficiencies.shape[0]
+            assert inputs.shape[0] == outputs.shape[0] == efficiencies.shape[1]
             
             X_set = np.concatenate((inputs,outputs),axis=1)
             #curr_y = np.array(curr_group.efficiencies).reshape(-1,1)
