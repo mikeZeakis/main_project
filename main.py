@@ -11,6 +11,10 @@ from torch.utils.data import random_split, DataLoader
 import torch
 import torch.nn as nn
 
+import matplotlib.pyplot as plt
+import os 
+
+
 def train_one_epoch(model, train_loader, optimizer, loss_fn, device):
     model.train()
 
@@ -34,7 +38,7 @@ def train_one_epoch(model, train_loader, optimizer, loss_fn, device):
     return avg_loss
 
 
-def test(model, test_loader, loss_fn, device):
+def validation(model, test_loader, loss_fn, device):
     model.eval()
 
     total_loss = 0.0
@@ -51,6 +55,7 @@ def test(model, test_loader, loss_fn, device):
             
             print(f"\nthe predictions: {preds}")
             print(f"the target {y}\n")
+            print(f"loss: {total_loss}")
             
     avg_loss = total_loss / len(test_loader)
         
@@ -73,21 +78,37 @@ def show_test_predictions(model, test_loader, device, samples=5):
             print(f"\nSample {i+1}")
             for dmu_idx, (t, p) in enumerate(zip(target, prediction)):
                 print(f"DMU {dmu_idx+1}: target={t:.4f}, prediction={p:.4f}")
+                
+                
+def plot_loss(train_losses,val_losses):
+    # Plot losses
+    plt.figure(figsize=(8, 5))
+    
+    plt.plot(train_losses, label="Training Loss")
+    plt.plot(val_losses, label="Validation Loss")
+    
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training vs Validation Loss")
+    plt.legend()
+    plt.grid(True)
+    
+    plt.show()
 
 
 if __name__ == "__main__":
     #you might need this line for an error!
-    #os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE" 
+    os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE" 
     
     #every group will have    
-    n_dmus = 10
-    n_inputs = 4
-    n_outputs = 3
+    n_dmus = 5
+    n_inputs = 2
+    n_outputs = 1
     
     input_range = [1,10]
     output_range = [1,40]
     
-    n_groups = 100
+    n_groups = 10
     
     #dataset creation
     #TODO: na ginei mia methodos na fygei apo tin main
@@ -133,8 +154,10 @@ if __name__ == "__main__":
     loss_fn = nn.MSELoss()
     optimizer = torch.optim.Adam(model_1.parameters(), lr=1e-3)
     
-    # training loop
-    num_epochs = 20
+    # training loop 1000
+    num_epochs = 10
+    train_losses = [] 
+    validation_losses = []
     
     print("Starting training...")
     for epoch in range(num_epochs):
@@ -146,12 +169,12 @@ if __name__ == "__main__":
             device=device
         )
     
-        # test_loss = test(
-        #     model=model_1,
-        #     test_loader=test_loader,
-        #     loss_fn=loss_fn,
-        #     device=device
-        # )
+        val_loss = validation(
+            model=model_1,
+            test_loader=test_loader,
+            loss_fn=loss_fn,
+            device=device
+        )
     
         print(
             f"Epoch {epoch+1}/{num_epochs} | "
@@ -159,9 +182,28 @@ if __name__ == "__main__":
             #f"Test Loss: {test_loss:.6f}"
         )
         
+        train_losses.append(train_loss)
+        validation_losses.append(val_loss)
+        
     
     #testing 
-    show_test_predictions(model_1, test_loader, device)
+    
+    #test_loss = test(model_1, test_loader, loss_fn, device)
+    #print(f"Average loss on testing dataset: {test_loss:.4f}")
+    #show_test_predictions(model_1, test_loader, device)
+    #plot_loss(train_losses,validation_losses)
+    plt.figure(figsize=(8, 5))
+    
+    plt.plot(train_losses, label="Training Loss")
+    plt.plot(validation_losses, label="Validation Loss")
+    
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training vs Validation Loss")
+    plt.legend()
+    plt.grid(True)
+    
+    plt.show()
     
     
     
