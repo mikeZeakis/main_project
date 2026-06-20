@@ -1,12 +1,10 @@
 #import libraries 
-from data.group_dataset import DMU_group
-from data.compined_dataset import Group_collection
-#from data.visualization import plot_efficiencies
 
 from set_transformer_1.model import SetTransformer
-from efficiency_scores import calculate_efficiencies
 
 from torch.utils.data import random_split, DataLoader
+
+from utils.generator import dataset_creation
 
 import torch
 import torch.nn as nn
@@ -53,20 +51,21 @@ def validation(model, test_loader, loss_fn, device):
 
             total_loss += loss.item()
             
-            print(f"\nthe predictions: {preds}")
-            print(f"the target {y}\n")
-            print(f"loss: {total_loss}")
+            #print(f"\nthe predictions: {preds}")
+            #print(f"the target {y}\n")
+            #print(f"validation loss: {total_loss}")
             
     avg_loss = total_loss / len(test_loader)
         
     return avg_loss
 
-def show_test_predictions(model, test_loader, device, samples=5):
+def show_test_predictions(model, test_loader, device, loss, samples=5):
     model.eval()
-
+    total_test_loss = 0.0
+    
     with torch.no_grad():
         for i, (X, y) in enumerate(test_loader):
-            if i == samples: break
+            if i == samples: break #early stop just to show some samples
             X = X.to(device)
             y = y.to(device)
 
@@ -101,29 +100,17 @@ if __name__ == "__main__":
     os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE" 
     
     #every group will have    
-    n_dmus = 5
-    n_inputs = 2
-    n_outputs = 1
+    n_dmus = 10
+    n_inputs = 3
+    n_outputs = 2
     
     input_range = [1,10]
     output_range = [1,40]
     
-    n_groups = 10
+    n_groups = 100
     
     #dataset creation
-    #TODO: na ginei mia methodos na fygei apo tin main
-    print("Dataset creation...")
-    dataset = Group_collection()
-    for group_index in range(n_groups):
-        current_dataset = DMU_group(n_dmus, n_inputs, n_outputs, input_range, output_range)
-        current_dataset.data_generator()
-        
-        #calculate efficiencies
-        for dmu_index in range(n_dmus):
-            theta, s_minus, s_plus, lambdas = calculate_efficiencies(current_dataset.inputs, current_dataset.outputs, dmu_index)
-            current_dataset.efficiencies.append(round(theta.item(),6)) 
-        
-        dataset.add_group(current_dataset)
+    dataset = dataset_creation(n_groups, n_dmus, n_inputs, n_outputs, input_range, output_range)
     
     #manipulate data to the correct form 
     dataset.data_manipulation()
@@ -135,7 +122,7 @@ if __name__ == "__main__":
     train_dataset, test_dataset = random_split(dataset,[train_size,test_size])
     
     #dataloaders
-    train_loader = DataLoader(train_dataset,batch_size=4)
+    train_loader = DataLoader(train_dataset,batch_size=8)
     test_loader = DataLoader(test_dataset,batch_size=1)
 
     #load model 
@@ -155,7 +142,7 @@ if __name__ == "__main__":
     optimizer = torch.optim.Adam(model_1.parameters(), lr=1e-3)
     
     # training loop 1000
-    num_epochs = 10
+    num_epochs = 200
     train_losses = [] 
     validation_losses = []
     
@@ -179,7 +166,7 @@ if __name__ == "__main__":
         print(
             f"Epoch {epoch+1}/{num_epochs} | "
             f"Train Loss: {train_loss:.6f} | "
-            #f"Test Loss: {test_loss:.6f}"
+            f"validation Loss: {val_loss:.6f}"
         )
         
         train_losses.append(train_loss)
@@ -190,7 +177,7 @@ if __name__ == "__main__":
     
     #test_loss = test(model_1, test_loader, loss_fn, device)
     #print(f"Average loss on testing dataset: {test_loss:.4f}")
-    #show_test_predictions(model_1, test_loader, device)
+    show_test_predictions(model_1, test_loader, device, loss_fn)
     #plot_loss(train_losses,validation_losses)
     plt.figure(figsize=(8, 5))
     
